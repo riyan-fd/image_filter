@@ -9,8 +9,8 @@ from tensorflow.keras.preprocessing import image as tf_image
 import base64
 from pathlib import Path
 import threading
-
-classifierModel = None
+# test
+classifierModel = None 
 validatorModel=None
 model_lock = threading.Lock()
 
@@ -47,7 +47,6 @@ def validate_image(img):
     img_array = tf_image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
     img_array /= 255.0  # Normalize the image
-
     prediction = validatorModel.predict(img_array)
     if prediction[0] > 0.5:
         return False
