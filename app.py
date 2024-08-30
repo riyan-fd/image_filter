@@ -15,6 +15,9 @@ validatorModel=None
 model_lock = threading.Lock()
 
 # Function to load the model at app startup
+model_dir = Path(__file__).parent / 'models'
+validator_model_path = model_dir / 'diamondvalidator.keras'
+classifier_model_path = model_dir / 'diamond_classifier_model_Shipready.keras'
 def load_model_on_startup():
     global validatorModel
     global classifierModel
@@ -22,11 +25,11 @@ def load_model_on_startup():
         with model_lock:
             if validatorModel is None:
                 logging.info("Loading validator model at startup...")
-                validatorModel = load_model('models/diamondvalidator.keras')
+                validatorModel = load_model(validator_model_path)
                 logging.info("Validator model loaded.")
             if classifierModel is None:
                 logging.info("Loading type classifier model at startup...")
-                classifierModel = load_model('models/diamond_classifier_model_Shipready.keras')
+                classifierModel = load_model(classifier_model_path)
                 logging.info("Classifier model loaded.")
     except Exception as e:
         logging.error(f"Error loading models: {e}")
