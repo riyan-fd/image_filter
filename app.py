@@ -15,9 +15,9 @@ validatorModel=None
 model_lock = threading.Lock()
 
 # Function to load the model at app startup
-model_dir = Path(__file__).parent / 'models'
-validator_model_path = model_dir / 'diamondvalidator.keras'
-classifier_model_path = model_dir / 'diamond_classifier_model_Shipready.keras'
+model_dir =  "/home/forge/diamond_filter/image_filter/models/models"
+validator_model_path = model_dir+"/diamondvalidator.keras"
+classifier_model_path = model_dir+'/diamond_classifier_model_Shipready.keras'
 def load_model_on_startup():
     global validatorModel
     global classifierModel
