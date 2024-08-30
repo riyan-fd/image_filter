@@ -3,9 +3,11 @@ import cv2
 import numpy as np
 import logging 
 from modules.cropDiamond import crop_image
-from tensorflow.keras.models import load_model  
+import keras
+# from tensorflow.keras.models import load_model  
 from PIL import Image
-from tensorflow.keras.preprocessing import image as tf_image
+from keras.preprocessing import image as tf_image
+# from tensorflow.keras.preprocessing import image as tf_image
 import base64
 from pathlib import Path
 import threading
@@ -15,6 +17,8 @@ validatorModel=None
 model_lock = threading.Lock()
 
 # Function to load the model at app startup
+# 
+# models
 model_dir =  "/home/forge/diamond_filter/image_filter/models/models"
 validator_model_path = model_dir+"/diamondvalidator.keras"
 classifier_model_path = model_dir+'/diamond_classifier_model_Shipready.keras'
@@ -25,11 +29,11 @@ def load_model_on_startup():
         with model_lock:
             if validatorModel is None:
                 logging.info("Loading validator model at startup...")
-                validatorModel = load_model(validator_model_path)
+                validatorModel =  keras.saving.load_model(validator_model_path)
                 logging.info("Validator model loaded.")
             if classifierModel is None:
                 logging.info("Loading type classifier model at startup...")
-                classifierModel = load_model(classifier_model_path)
+                classifierModel =  keras.saving.load_model(classifier_model_path)
                 logging.info("Classifier model loaded.")
     except Exception as e:
         logging.error(f"Error loading models: {e}")
@@ -40,8 +44,6 @@ def load_model_on_startup():
             logging.error("Classifier model is not loaded.")
 
 app = Flask(__name__)
-
-TEMP_FOLDER = Path(__file__).parent / 'temp'
 
 # validator func
 def validate_image(img):
