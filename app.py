@@ -30,6 +30,11 @@ def load_model_on_startup():
                 logging.info("Classifier model loaded.")
     except Exception as e:
         logging.error(f"Error loading models: {e}")
+        # Additional logging to ensure models are loaded
+        if validatorModel is None:
+            logging.error("Validator model is not loaded.")
+        if classifierModel is None:
+            logging.error("Classifier model is not loaded.")
 
 app = Flask(__name__)
 
