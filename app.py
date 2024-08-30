@@ -19,7 +19,7 @@ model_lock = threading.Lock()
 # Function to load the model at app startup
 # 
 # models
-model_dir =  "/home/forge/diamond_filter/image_filter/models/models"
+model_dir =  "/home/forge/diamond_filter/image_filter/models"
 validator_model_path = model_dir+"/diamondvalidator.keras"
 classifier_model_path = model_dir+'/diamond_classifier_model_Shipready.keras'
 def load_model_on_startup():
