@@ -17,11 +17,12 @@ validatorModel=None
 model_lock = threading.Lock()
 
 # Function to load the model at app startup
-# 
+model_dir="/home/forge/diamond_filter/image_filter/models"
 # models
-model_dir =  "/home/forge/diamond_filter/image_filter/models"
-validator_model_path = model_dir+"/diamondvalidator.keras"
+# model_dir =  "models"
+validator_model_path = model_dir+"/validatormodel773.keras"
 classifier_model_path = model_dir+'/diamond_classifier_model_Shipready.keras'
+
 def load_model_on_startup():
     global validatorModel
     global classifierModel
@@ -59,9 +60,9 @@ def validate_image(img):
     img_array /= 255.0  # Normalize the image
     prediction = validatorModel.predict(img_array)
     if prediction[0] > 0.5:
-        return False
+        return False,prediction[0]
     else:
-        return True
+        return True,prediction[0]
     
 # classify diamond type
 def validate_Type_image(img):
@@ -78,7 +79,7 @@ def validate_Type_image(img):
     img_array /= 255.0  # Normalize the image
 
     prediction = classifierModel.predict(img_array)
-    print(prediction)
+    # print(prediction)
     class_idx = np.argmax(prediction[0])
     return class_labels[class_idx]
 
@@ -106,9 +107,10 @@ def process_image():
     except Exception as e:
         return jsonify({"success": False, "message": f"Error processing image: {str(e)}"}), 400
 
-    Validity=validate_image(image)
+    Validity,estimation=validate_image(image)
+    estimation_list = estimation.tolist()
     if not Validity:
-        return jsonify({"success": False, "message": "Image Rejected"}), 400
+        return jsonify({"success": False, "message": "Image Rejected","estimation":estimation_list}), 400
 
     shape=validate_Type_image(image)
 
@@ -122,8 +124,10 @@ def process_image():
             "success": True,
             "shape":shape,
             "valid": Validity  ,
+            "estimation":estimation_list,
             "image": image_base64
         }
+    print(response)
     
     return jsonify(response), 200
 
